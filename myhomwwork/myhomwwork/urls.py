@@ -15,10 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from mysite.views import logins,main,register
+from mysite.views import logins,register
+from mysite.views import StaffListView, StaffCreateView, StaffUpdateView, StaffDeleteView
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',logins,name='logins'),
-    path('main/',main,name='main'),
-    path('register/',register,name='register')
+    path('register/',register,name='register'),
+    path('staff/', StaffListView.as_view(), name='staff_list'),
+    path('staff/create/', StaffCreateView.as_view(), name='staff_create'),
+    path('staff/update/<int:pk>/', StaffUpdateView.as_view(), name='staff_update'),
+    path('staff/delete/<int:pk>/', StaffDeleteView.as_view(), name='staff_delete'),
+
 ]
