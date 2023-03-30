@@ -22,7 +22,7 @@ def logins(request):
         is_first_load = False
         if user:
             login(request, user)
-            return redirect('staff_list/')
+            return redirect('staff_list')
         else:
             if not username:
                 msg_username = "username is empty"
