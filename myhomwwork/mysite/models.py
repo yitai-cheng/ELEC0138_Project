@@ -13,6 +13,7 @@ class Staff(models.Model):
     salary = models.DecimalField('Salary',max_digits=10,decimal_places=2)
     updated_by=models.CharField(max_length=20,default='huziyu')
     updated_at = models.DateTimeField(auto_now=True)
+    email = models.EmailField('Email',max_length=100,default='example@example.com')
     def get_absolute_url(self): 
         return reverse('book_list')
     

@@ -73,7 +73,7 @@ class StaffListView(ListView):
 class StaffCreateView(CreateView):
     model = Staff
     template_name = 'staff_create.html'
-    fields = ('staff_id', 'name', 'department', 'title', 'gender', 'description', 'entry_time', 'salary', 'updated_by')
+    fields = ('staff_id', 'name', 'department', 'title', 'gender', 'email','description', 'entry_time', 'salary', 'updated_by')
     success_url = reverse_lazy('staff_list')
 
 class StaffUpdateView(UpdateView):
