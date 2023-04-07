@@ -70,8 +70,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'myhomwwork.wsgi.application'
-
-
+TWILIO_VERIFY_SERVICE_SID = 'VA834e4172d8e3e4610f2b91645d1bda52' 
+TWILIO_ACCOUNT_SID = 'AC1968762f0bc6d7a7a8b4659577262409'
+TWILIO_AUTH_TOKEN = 'a8627085f538918fda8085315c33b1be'
+TWILIO_PHONE_NUMBER = '+447516380363'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 

@@ -9,6 +9,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Staff
 from django.db.models import Q,Sum
 from django.core.paginator import Paginator
+from django.contrib.auth import authenticate, login,get_user_model
+from django.http import HttpResponseRedirect
+from .utils import send_verification_code, generate_verification_code,check_verification_code
+from django.http import JsonResponse
+from twilio.rest import Client
+from django.conf import settings
+import json
+
 PAGINATOR_NUMBER = 5
 def logins(request):
     msg_username = ""
@@ -18,11 +26,15 @@ def logins(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        
         user = authenticate(username=username, password=password)
         is_first_load = False
         if user:
-            login(request, user)
-            return redirect('staff_list')
+            verification_code = generate_verification_code()
+            send_verification_code(user.phone_number, verification_code)
+            request.session['verification_code'] = verification_code
+            return HttpResponseRedirect('/verify_code/')
+
         else:
             if not username:
                 msg_username = "username is empty"
@@ -34,6 +46,27 @@ def logins(request):
         return render(request, 'login.html', {'msg_username': msg_username, 'msg_password': msg_password, 'msg_auth': msg_auth,'is_first_load': is_first_load})
 
     return render(request, 'login.html', {'is_first_load': is_first_load})
+
+def get_verification_code(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        phone_number = body.get('phone_number')
+        verification_code = generate_verification_code()
+ 
+        send_verification_code(phone_number, verification_code)
+        request.session['verification_code'] = verification_code
+        return JsonResponse({'status': 'success'})
+        
+def verify_code_view(request):
+    if request.method == 'POST':
+        user_code = request.POST['verification_code']
+        phone_number = request.session.get('phone_number')
+        if check_verification_code(phone_number, user_code):
+            login(request, request.user)
+            return HttpResponseRedirect('/success/')
+        else:
+            return HttpResponseRedirect('/verify_code/')
+
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')

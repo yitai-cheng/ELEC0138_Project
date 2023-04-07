@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from mysite.views import logins,register
+from mysite.views import logins,register,get_verification_code
 from mysite.views import StaffListView, StaffCreateView, StaffUpdateView, StaffDeleteView
 
 
@@ -27,5 +27,5 @@ urlpatterns = [
     path('staff/create/', StaffCreateView.as_view(), name='staff_create'),
     path('staff/update/<int:pk>/', StaffUpdateView.as_view(), name='staff_update'),
     path('staff/delete/<int:pk>/', StaffDeleteView.as_view(), name='staff_delete'),
-
+    path('get_verification_code/', get_verification_code, name='get_verification_code'),
 ]
