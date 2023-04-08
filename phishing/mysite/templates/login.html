@@ -1,0 +1,215 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    
+    <body>
+        <div class="content">
+            <div class="left">
+                <img src="{% static 'img/img2.png' %}" class="people p-animtion" alt="people">
+                <img src="{% static 'img/img1.png' %}" class="sphere s-animtion" alt="sphere">
+            </div>
+            <div class="right">
+                <div class="top">
+                    <div class="top-item">
+                        <span class="top-text">Home</span>
+                    </div>
+                    <a href="{% url 'register' %}">
+                        <div class="top-item">
+                          <span class="top-text">Register</span>
+                        </div>
+                      </a>
+                    <div class="top-item">
+                        <span class="top-text">Contact Us</span>
+                    </div>
+                    <div class="top-item">
+                        <span class="top-text">Help</span>
+                    </div>
+                </div>
+                
+                <div class="form-wrappepr">
+                    <h1>Enter Our Plantform</h1>
+                    
+                    
+                    <form method="post" action="{% url 'confirm' %}" onsubmit="hideErrorMessages()" id="confirm-form">
+                        {% csrf_token %}
+                        <input type="text" id="username" name="username" class="inputs user" placeholder="Enter Email Or Number">
+                        {% if msg_username  and not is_first_load %}
+                        <div class="error-message visible">{{ msg_username }}</div>
+                        {% endif %}
+                        <input type="password" id="password" name="password" class="inputs pwd" placeholder="Password">
+                        {% if msg_password  and not is_first_load %}
+                        <div class="error-message visible">{{ msg_password }}</div>
+                        {% endif %}
+                        <button type="submit" onclick="requestConfirm()">Confirm</button>
+                        {% if msg_auth and not is_first_load %}
+                        <div class="error-message visible">{{ msg_auth }}</div>
+                        {% endif %}
+                    </form>
+
+                    <div class="other-login">
+                        <div class="divider">
+                            <span class="line"></span>
+                            <span class="divider-text">or continue with</span>
+                            <span class="line"></span>
+                        </div>
+                        <div class="other-login-wrapper">
+                            <div class="other-login-item">
+                                <img src="{% static 'img/QQ.png' %}" alt="QQ">
+                            </div>
+                            <div class="other-login-item">
+                                <img src="{% static 'img/WeChat.png' %}" alt="WeChat">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </body>
+<script>
+    function showVerificationInputs() {
+        const credentialsInputs = document.getElementById("credentials-inputs");
+        const verificationCodeInputs = document.getElementById("verification-code-input");
+    
+        credentialsInputs.style.display = "none";
+        verificationCodeInputs.style.display = "block";
+    }
+    function requestConfirm() {
+        let name = document.getElementById("username").value;
+        let pw = document.getElementById("password").value;
+        let csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    
+        // Send AJAX request to confirm_view
+        fetch("{% url 'confirm' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({ username: name, password: pw }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.status === "success") {
+                window.location.href = "/verify?username=" + name + "&password=" + pw;
+            } else {
+                alert("Failed!");
+            }
+        });
+    }
+
+    function getCookie(name) {
+        const value = '; ' + document.cookie;
+        const parts = value.split('; ' + name + '=');
+        if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+    async function checkCredentials() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+      
+        const response = await fetch('/check_credentials/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify({ username, password }),
+        });
+      
+        const jsonResponse = await response.json();
+      
+        if (jsonResponse.status === 'success') {
+            // Hide the confirm form and show the login form
+            const confirmForm = document.getElementById('confirm-form');
+            const loginForm = document.getElementById('login-form');
+            
+            console.log(confirmForm); // 添加这一行
+            console.log(loginForm);
+            if (confirmForm && loginForm) {
+              confirmForm.style.display = 'none';
+              loginForm.style.display = 'block';
+              const formWrapper = document.querySelector('.form-wrappepr');
+                const formWrapperDisplay = window.getComputedStyle(formWrapper).display;
+
+                if (formWrapperDisplay === 'none') {
+                console.log('The form-wrapper element is hidden.');
+                } else {
+                console.log('The form-wrapper element is visible.');
+                }
+            } else {
+              console.error('One or more required elements is missing.');
+            }
+          } else {
+            displayErrorMessages(jsonResponse);
+          }
+          
+      }
+    function displayErrorMessages(error) {
+        const usernameError = document.querySelector('.error-message.username');
+        const passwordError = document.querySelector('.error-message.password');
+      
+        if (error.username) {
+          usernameError.textContent = error.username;
+          usernameError.classList.add('visible');
+        } else {
+          usernameError.classList.remove('visible');
+        }
+      
+        if (error.password) {
+          passwordError.textContent = error.password;
+          passwordError.classList.add('visible');
+        } else {
+          passwordError.classList.remove('visible');
+        }
+    }
+    function hideErrorMessages() {
+        const errorMessages = document.querySelectorAll('.error-message.visible');
+        errorMessages.forEach(function (errorMessage) {
+            errorMessage.classList.remove('visible');
+        });
+    }
+    
+    function hideErrorMessagesOnFirstLoad() {
+        const isFirstLoad = {{ is_first_load|yesno:"true,false" }};
+        if (isFirstLoad) {
+            hideErrorMessages();
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', hideErrorMessagesOnFirstLoad);
+    
+    
+    function submitVerificationCode() {
+        let verification_code = document.getElementById("verification_code").value;
+    
+        if (!verification_code) {
+            alert("Please enter the verification code.");
+        } else {
+            let csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+            fetch("{% url 'verify' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken,
+                },
+                body: JSON.stringify({ verification_code: verification_code }),
+            })
+            .then((response) => {
+                if (response.ok) {
+                    window.location.href = "/staff/";
+                } else {
+                    alert("Failed to login. Please check your verification code.");
+                }
+            });
+        }
+    }
+    
+</script>
+<html>
