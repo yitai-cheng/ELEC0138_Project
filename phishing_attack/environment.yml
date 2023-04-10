@@ -1,0 +1,20 @@
+name: security_env
+
+dependencies:
+  - python=3.7
+  - pip
+  - pip:
+    - numpy
+    - requests
+    - matplotlib
+    - pandas
+    - jupyter
+    - jupyterlab
+    - seaborn
+    - scipy
+    - sklearn
+    - tensorflow
+    - keras
+    - scikit-learn
+    - pydot
+    - torch
