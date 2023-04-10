@@ -18,9 +18,9 @@ from django.conf import settings
 import json
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-import rsa
-import base64
-from .utils import generate_RSA_keys, encrypt_RSA, decrypt_RSA
+from django.views.decorators.http import require_POST
+
+from django.contrib.auth.decorators import login_required
 PAGINATOR_NUMBER = 5
 def confirm(request):
     if request.POST.get('username') and request.POST.get('password'):
@@ -38,7 +38,7 @@ def confirm(request):
             return JsonResponse({'status': 'failure'})
     return render(request, 'login.html')
 
-
+@require_POST
 def verify(request):
     if request.method == 'POST':
         verification_code = request.POST.get('verification_code')
@@ -46,74 +46,22 @@ def verify(request):
             username = request.POST.get('username')
             password = request.POST.get('password')
             user = authenticate(request, username=username, password=password)
-            print(username)
-            print(password)
+
             if user is not None:
-                print("准备登录")
+
                 login(request, user)
+
                 return redirect('/staff_list/')
             else:
-                print("报错了")
-                messages.error(request, 'Username or password is incorrect.')
-        elif verification_code:
-            print("没有post请求？")
-            messages.error(request, 'Verification code is incorrect.')
-    return render(request, 'verify.html')
-"""def logins(request):
-    msg_username = ""
-    msg_password = ""
-    msg_auth = ""
-    is_first_load = True
-    is_ajax_request = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-    print("你他妈有在运行吗")
-    if request.method == 'POST':
-        if 'verification_code' in request.POST:  # 验证码登录
-            verification_code = request.POST.get('verification_code')
-            if verification_code == request.session.get('verification_code'):
-                username = request.session.get('username')
-                password = request.session.get('password')
-                user = authenticate(request, username=username, password=password)
-                if user is not None:
-                    login(request, user)
-                    return redirect('/success/')
-                else:
-                    msg_auth = "username or password is wrong"
-            else:
-                msg_auth = "verification code is invalid"
-        else:  # 用户名密码登录
-            username = request.session.get('username')
-            password = request.session.get('password')
-            user = authenticate(request, username=username, password=password)
-            is_first_load = False
-            if user:
-                request.session['username'] = username
-                request.session['password'] = password
-                request.session['verification_code'] = generate_verification_code()
-                send_verification_code(user.phone_number, request.session['verification_code'])
-                return redirect('/verify_code/')
-            else:
-                if not username:
-                    msg_username = "username is empty"
-                if not password:
-                    msg_password = "password is empty"
-                if username and password:
-                    msg_auth = "username or password is wrong"
-        if is_ajax_request:
-            if user:
-                response_data = {'status': 'success'}
-            else:
-                response_data = {
-                    'status': 'failure',
-                    'msg_username': msg_username,
-                    'msg_password': msg_password,
-                    'msg_auth': msg_auth
-                }
-            return JsonResponse(response_data)
-        else:
-            return render(request, 'login.html', {'msg_username': msg_username, 'msg_password': msg_password, 'msg_auth': msg_auth, 'is_first_load': is_first_load})
 
-    return render(request, 'login.html', {'is_first_load': is_first_load})
-"""
+                messages.error(request, 'Username or password is incorrect.')
+
+        elif verification_code:
+
+            messages.error(request, 'Verification code is incorrect.')
+
+    return render(request, 'verify.html')
+
 @csrf_exempt
 def check_credentials(request):
     if request.method == 'POST':
@@ -180,19 +128,19 @@ def register(request):
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Staff
-
+@login_required
 class StaffListView(ListView):
     model = Staff
     template_name = 'staff_list.html'
     context_object_name = 'staff_list'
     paginate_by = 10
-
+@login_required
 class StaffCreateView(CreateView):
     model = Staff
     template_name = 'staff_create.html'
     fields = ('staff_id', 'name', 'department', 'title', 'gender', 'email','description', 'entry_time', 'salary', 'updated_by')
     success_url = reverse_lazy('staff_list')
-
+@login_required
 class StaffUpdateView(UpdateView):
     model = Staff
     fields = ['staff_id', 'name', 'department', 'title', 'gender', 'description', 'entry_time', 'salary']
@@ -201,7 +149,7 @@ class StaffUpdateView(UpdateView):
     def form_valid(self, form):
         form.instance.updated_by = self.request.user.username
         return super().form_valid(form)
-
+@login_required
 class StaffDeleteView(DeleteView):
     model = Staff
     template_name = 'staff_delete.html'
