@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Staff Management {% endblock %}
+
+{% block content %}
+    <h1>Staff Management</h1>
+    <a href="{% url 'staff_create' %}" class="btn btn-primary mb-3">Add New Staff</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Title</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Entry Time</th>
+                <th>Salary</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for staff in staff_list %}
+                <tr>
+                    <td>{{ staff.staff_id }}</td>
+                    <td>{{ staff.name }}</td>
+                    <td>{{ staff.department }}</td>
+                    <td>{{ staff.title }}</td>
+                    <td>{{ staff.gender }}</td>
+                    <td>{{ staff.email }}</td>
+                    <td>{{ staff.entry_time }}</td>
+                    <td>{{ staff.salary }}</td>
+                    <td>
+                        <a href="{% url 'staff_update' staff.pk %}" class="btn btn-sm btn-info">Update</a>
+                        <a href="{% url 'staff_delete' staff.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
