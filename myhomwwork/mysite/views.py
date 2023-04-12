@@ -12,52 +12,55 @@ from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login,get_user_model
 from django.http import HttpResponseRedirect
 from .utils import send_verification_code, generate_verification_code,check_verification_code
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponseNotAllowed
 from twilio.rest import Client
 from django.conf import settings
 import json
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 PAGINATOR_NUMBER = 5
+
 def confirm(request):
-    if request.POST.get('username') and request.POST.get('password'):
+    if request.method == 'POST':
+        if request.POST.get('username') and request.POST.get('password'):
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(request, username=username, password=password)
-        if user:
-            return HttpResponseRedirect('/verify?username={}&password={}'.format(
-            username,
-            password
-        ))
+            user = authenticate(request, username=username, password=password)
+            if user:
+                request.session['username'] = username
+                request.session['password'] = password
+                redirect_url = reverse('verify')
+                print(redirect_url)
+                return redirect(redirect_url)
+            else:
+                return JsonResponse({'status': 'failure'})
         else:
-            return JsonResponse({'status': 'failure'})
-    return render(request, 'login.html')
+            return JsonResponse({'status': 'missing_data'})
+    elif request.method == 'GET':
+        return render(request, 'login.html')
+    else:
+        return HttpResponseNotAllowed(['GET', 'POST'])
 
-@require_POST
+
 def verify(request):
     if request.method == 'POST':
         verification_code = request.POST.get('verification_code')
         if verification_code == request.session.get('verification_code'):
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+            username = request.session.get('username')
+            password = request.session.get('password')
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
-
                 login(request, user)
-
                 return redirect('/staff_list/')
             else:
-
                 messages.error(request, 'Username or password is incorrect.')
-
         elif verification_code:
-
             messages.error(request, 'Verification code is incorrect.')
 
     return render(request, 'verify.html')
@@ -128,20 +131,29 @@ def register(request):
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Staff
-@login_required
-class StaffListView(ListView):
+
+class StaffListView(LoginRequiredMixin,ListView):
     model = Staff
     template_name = 'staff_list.html'
     context_object_name = 'staff_list'
     paginate_by = 10
-@login_required
-class StaffCreateView(CreateView):
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            return redirect('staff_list')
+        else:
+
+            error_message = 'Invalid username or password.'
+            return render(request, self.template_name, {'error_message': error_message})
+class StaffCreateView(LoginRequiredMixin,CreateView):
     model = Staff
     template_name = 'staff_create.html'
     fields = ('staff_id', 'name', 'department', 'title', 'gender', 'email','description', 'entry_time', 'salary', 'updated_by')
     success_url = reverse_lazy('staff_list')
-@login_required
-class StaffUpdateView(UpdateView):
+
+class StaffUpdateView(LoginRequiredMixin,UpdateView):
     model = Staff
     fields = ['staff_id', 'name', 'department', 'title', 'gender', 'description', 'entry_time', 'salary']
     template_name = 'staff_update.html'
@@ -149,8 +161,8 @@ class StaffUpdateView(UpdateView):
     def form_valid(self, form):
         form.instance.updated_by = self.request.user.username
         return super().form_valid(form)
-@login_required
-class StaffDeleteView(DeleteView):
+
+class StaffDeleteView(LoginRequiredMixin,DeleteView):
     model = Staff
     template_name = 'staff_delete.html'
     success_url = reverse_lazy('staff_list')

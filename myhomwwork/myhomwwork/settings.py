@@ -28,7 +28,24 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
+# 设置默认的cache
+CACHE_TTL = 60 * 15  # 缓存15分钟
+CACHES["default"]["TIMEOUT"] = CACHE_TTL
 
 INSTALLED_APPS = [
     'django.contrib.admin',
