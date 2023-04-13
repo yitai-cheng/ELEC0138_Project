@@ -13,9 +13,9 @@ backup:
 you should install redis on your computer(there are some difficults) and after that you should run three commands in different terminals:
         celery -A mysite worker --pool=solo -l info
 
+        set DJANGO_SETTINGS_MODULE=myhomwwork.settings
         celery -A mysite beat -l info
-
-
+        
         sudo -u redis redis-server /mnt/d/new_security/ELEC0138_Project/redis-7.0.10/redis.conf(this commend will start redis server and it is different depends on your configuration)
 
 you can test this function by:

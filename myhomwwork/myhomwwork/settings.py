@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mysite',
     'sslserver',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -127,7 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/London'
+CELERY_TIMEZONE = TIME_ZONE
 
 USE_I18N = True
 

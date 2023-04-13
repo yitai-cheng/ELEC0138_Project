@@ -1,6 +1,6 @@
 import os
-import datetime
 import pickle
+from datetime import datetime
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
@@ -8,6 +8,7 @@ from django.conf import settings
 from django.core.management import call_command
 from celery import shared_task
 import logging
+import tempfile
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 token_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'token.pickle')
@@ -17,19 +18,21 @@ with open(token_file_path, 'rb') as token:
     creds = pickle.load(token)
 
 # Initialize Google Drive API client
-service = build('drive', 'v3', credentials=creds)
+service = build('drive', 'v3', credentials=creds, cache_discovery=False)
 
 @shared_task
 def backup_data_to_google_drive():
 
     logging.info('Starting backup_data_to_google_drive task')
-    backup_file = f"backup_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-    backup_path = os.path.join('/tmp', backup_file)
-
+   
+    # Create a temporary file to store the database backup
+    now = datetime.now().strftime("%Y%m%d_%H%M%S")
+    temp_dir = tempfile.gettempdir()
+    backup_path = os.path.join(temp_dir, f"backup_{now}.json")
     call_command('dumpdata', 'mysite', output=backup_path)
 
     file_metadata = {
-        'name': backup_file,
+        'name': backup_path,
         'mimeType': 'application/json',
     }
 
