@@ -1,0 +1,1 @@
+[{"model": "mysite.staff", "pk": 1, "fields": {"name": "huziyu", "department": "Sales", "title": "manager", "gender": "male", "description": "nothing", "entry_time": "2023-03-29T02:25:05Z", "salary": "1000.00", "updated_by": "huziyu", "updated_at": "2023-03-29T01:26:06.326Z", "email": "example@example.com"}}]

@@ -12,7 +12,7 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 app.conf.beat_schedule = {
     'backup-every-day-at-4-34pm': {
         'task': 'mysite.tasks.backup_data_to_google_drive',
-        'schedule': crontab(hour=16, minute=34),
+        'schedule': crontab(hour=17, minute=21),
         'args': (),
     },
 }

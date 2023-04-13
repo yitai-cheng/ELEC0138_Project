@@ -28,7 +28,7 @@ def backup_data_to_google_drive():
     # Create a temporary file to store the database backup
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
     temp_dir = tempfile.gettempdir()
-    backup_path = os.path.join(temp_dir, f"backup_{now}.json")
+    backup_path = os.path.join(temp_dir, f"backup_ELE.json")
     call_command('dumpdata', 'mysite', output=backup_path)
 
     file_metadata = {
