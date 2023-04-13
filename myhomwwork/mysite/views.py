@@ -1,31 +1,22 @@
-from django.shortcuts import render
-from mysite import models
-from django.contrib.auth import authenticate, login,logout
-from django.contrib.auth.models import User
-from django.shortcuts import redirect
-from django.utils.decorators import method_decorator
-from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin 
-from .models import Staff
-from django.db.models import Q,Sum
-from django.core.paginator import Paginator
-from django.contrib.auth import authenticate, login,get_user_model
-from django.http import HttpResponseRedirect
-from .utils import send_verification_code, generate_verification_code,check_verification_code
-from django.http import JsonResponse,HttpResponseNotAllowed
-from twilio.rest import Client
-from django.conf import settings
 import json
 from django.contrib import messages
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.http import HttpResponseNotAllowed
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+
+from .utils import send_verification_code, generate_verification_code
+
 PAGINATOR_NUMBER = 5
 
 def confirm(request):
     if request.method == 'POST':
+        print(request.POST)
         if request.POST.get('username') and request.POST.get('password'):
             username = request.POST.get('username')
             password = request.POST.get('password')

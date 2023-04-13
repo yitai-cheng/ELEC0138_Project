@@ -1,7 +1,7 @@
 Enter the OpenSSL directory
 Configure OpenSSL：./config
 Compile OpenSSL：make
-Install OpenSSL:sudo make install
+Install OpenSSL: sudo make install
 test:openssl version
 
 

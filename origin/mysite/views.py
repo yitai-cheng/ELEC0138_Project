@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from mysite import models
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
@@ -18,9 +17,6 @@ from django.conf import settings
 import json
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-import rsa
-import base64
-from .utils import generate_RSA_keys, encrypt_RSA, decrypt_RSA
 PAGINATOR_NUMBER = 5
 
 
@@ -105,6 +101,7 @@ def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        # add password generator???
         password2 = request.POST.get('password2')
         email = request.POST.get('email')
         if User.objects.filter(username=username).exists():
