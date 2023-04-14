@@ -7,46 +7,65 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
-    <div class="content">
-        <div class="left">
-            <img src="{% static 'img/img2.png' %}" class="people p-animtion" alt="people">
-            <img src="{% static 'img/img1.png' %}" class="sphere s-animtion" alt="sphere">
-        </div>
-        <div class="right">
-            
-            <div class="form-wrappepr">
-                <h1>Register</h1>
-                <form method="post" action="{% url 'register' %}">
-                    {% csrf_token %}
+<div class="content">
+    <div class="left">
+        <img src="{% static 'img/img2.png' %}" class="people p-animtion" alt="people">
+        <img src="{% static 'img/img1.png' %}" class="sphere s-animtion" alt="sphere">
+    </div>
+    <div class="right">
+
+        <div class="form-wrappepr">
+            <h1>Register</h1>
+            <form method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+                <label>
                     <input type="text" name="username" class="inputs user" placeholder="Enter User Name">
-                    <input type="password" name="password" class="inputs pwd" placeholder="Password">
-                    <input type="password" name="password2" class="inputs pwd" placeholder="Password2">
+                </label>
+                <div class="password-container">
+                    <label>
+                        <input type="password" name="password" class="inputs pwd" placeholder="Password">
+                    </label>
+                    <label>
+                        <input type="checkbox" class="show-password"> Show Password
+                    </label>
+                </div>
+                <div class="password-container">
+                    <label>
+                        <input type="password" name="password2" class="inputs pwd" placeholder="Password2">
+                    </label>
+                    <label>
+                        <input type="checkbox" class="show-password"> Show Password
+                    </label>
+                </div>
+                <label>
                     <input type="text" name="email_or_number" class="inputs user" placeholder="Enter Email Or Number">
-                    <button type="submit">Registe</button>
-                </form>
-                <div class="other-login">
-                    <div class="divider">
-                        <span class="line"></span>
-                        <span class="divider-text">or continue with</span>
-                        <span class="line"></span>
+                </label>
+                <button type="submit">Registe</button>
+            </form>
+            <div class="other-login">
+                <div class="divider">
+                    <span class="line"></span>
+                    <span class="divider-text">or continue with</span>
+                    <span class="line"></span>
+                </div>
+                <div class="other-login-wrapper">
+                    <div class="other-login-item">
+                        <img src="{% static 'img/QQ.png' %}" alt="QQ">
                     </div>
-                    <div class="other-login-wrapper">
-                        <div class="other-login-item">
-                            <img src="{% static 'img/QQ.png' %}" alt="QQ">
-                        </div>
-                        <div class="other-login-item">
-                            <img src="{% static 'img/WeChat.png' %}" alt="WeChat">
-                        </div>
+                    <div class="other-login-item">
+                        <img src="{% static 'img/WeChat.png' %}" alt="WeChat">
                     </div>
                 </div>
             </div>
-
         </div>
+
     </div>
+</div>
 </body>
 <script>
     document.querySelector(".people").addEventListener('animationend', function () {
@@ -56,7 +75,37 @@
     document.querySelector(".sphere").addEventListener('animationend', function () {
         this.classList.remove('s-animtion');
         this.classList.add('s-other-animtion')
-    });	
+    });
+
+    $(function () {
+        // Add a click event listener to the "Show Password" checkboxes
+        $(".show-password").on("click", function () {
+            // Get the corresponding password input field
+            let passwordField = $(this).parent().prev().children(".pwd");
+            // Toggle the password field's type attribute between "password" and "text"
+            if ($(this).prop("checked")) {
+                passwordField.attr("type", "text");
+            } else {
+                passwordField.attr("type", "password");
+            }
+        });
+
+        // Add a click event listener to the password input fields
+        $(".pwd").on("click", function () {
+            // Check if the click event originated from the password input field
+            // Ask the user if they want to generate a random password
+            if (confirm("Do you want to generate a random password?")) {
+                // Send an AJAX request to the server to generate the password
+                $.get('/generate_password/', function (data) {
+                    // Set the value of both password input fields to the generated password
+                    $(".pwd").val(data.password);
+                });
+            }
+
+        });
+    });
+
+
 </script>
 
 </html>

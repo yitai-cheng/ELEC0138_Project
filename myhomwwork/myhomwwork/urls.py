@@ -11,23 +11,24 @@ Class-based views
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+    2.  mAdd a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
 from django.urls import path
-from mysite.views import confirm,verify,register,get_verification_code,check_credentials
+from mysite.views import confirm, verify, register, get_verification_code, check_credentials
 from mysite.views import StaffListView, StaffCreateView, StaffUpdateView, StaffDeleteView
-
+from mysite.views import generate_password_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', confirm, name='confirm'),
     path('verify/', verify, name='verify'),
-    path('register/',register,name='register'),
+    path('register/', register, name='register'),
     path('staff_list/', StaffListView.as_view(), name='staff_list'),
     path('staff/create/', StaffCreateView.as_view(), name='staff_create'),
     path('staff/update/<int:pk>/', StaffUpdateView.as_view(), name='staff_update'),
     path('staff/delete/<int:pk>/', StaffDeleteView.as_view(), name='staff_delete'),
     path('get_verification_code/', get_verification_code, name='get_verification_code'),
     path('check_credentials/', check_credentials, name='check_credentials'),
+    path('generate_password/', generate_password_view, name='generate_password'),
 ]
