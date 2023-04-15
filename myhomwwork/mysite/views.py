@@ -120,9 +120,7 @@ def get_verification_code(request):
 
 
 def register(request):
-    print("!!!")
     if request.method == 'POST':
-        print("???")
         username = request.POST.get('username')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
@@ -145,7 +143,6 @@ def register(request):
 
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
-        print(reverse('confirm'))
         return redirect(reverse('confirm'))
     return render(request, 'register.html')
 
