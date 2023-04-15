@@ -15,18 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from mysite.views import logins,register,get_verification_code,check_credentials
+from mysite.views import logins, register
 from mysite.views import StaffListView, StaffCreateView, StaffUpdateView, StaffDeleteView
 
+from mysite.views import login
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',logins,name='login'),
-    path('register/',register,name='register'),
+    path('', logins, name='login'),
+    path('register/', register, name='register'),
     path('staff_list/', StaffListView.as_view(), name='staff_list'),
     path('staff/create/', StaffCreateView.as_view(), name='staff_create'),
     path('staff/update/<int:pk>/', StaffUpdateView.as_view(), name='staff_update'),
-    path('staff/delete/<int:pk>/', StaffDeleteView.as_view(), name='staff_delete'),
-    path('get_verification_code/', get_verification_code, name='get_verification_code'),
-    path('check_credentials/', check_credentials, name='check_credentials'),
+    path('staff/delete/<int:pk>/', StaffDeleteView.as_view(), name='staff_delete')
 ]
