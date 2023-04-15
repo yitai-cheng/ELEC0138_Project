@@ -63,45 +63,45 @@ def logins(request):
                        'is_first_load': is_first_load})
 
 
-def logins(request):
-    msg_username = ""
-    msg_password = ""
-    msg_auth = ""
-    is_first_load = True
-    is_ajax_request = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        is_first_load = False
-
-        if user is not None:
-            login(request, user)
-            return redirect('/staff_list/')
-        else:
-            if not username:
-                msg_username = "Username is empty"
-            if not password:
-                msg_password = "Password is empty"
-            if username and password:
-                msg_auth = "Username or password is wrong"
-
-    if is_ajax_request:
-        if user:
-            response_data = {'status': 'success'}
-        else:
-            response_data = {
-                'status': 'failure',
-                'msg_username': msg_username,
-                'msg_password': msg_password,
-                'msg_auth': msg_auth
-            }
-        return JsonResponse(response_data)
-    else:
-        return render(request, 'login.html',
-                      {'msg_username': msg_username, 'msg_password': msg_password, 'msg_auth': msg_auth,
-                       'is_first_load': is_first_load})
+# def logins(request):
+#     msg_username = ""
+#     msg_password = ""
+#     msg_auth = ""
+#     is_first_load = True
+#     is_ajax_request = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+#
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+#         user = authenticate(request, username=username, password=password)
+#         is_first_load = False
+#
+#         if user is not None:
+#             login(request, user)
+#             return redirect('/staff_list/')
+#         else:
+#             if not username:
+#                 msg_username = "Username is empty"
+#             if not password:
+#                 msg_password = "Password is empty"
+#             if username and password:
+#                 msg_auth = "Username or password is wrong"
+#
+#     if is_ajax_request:
+#         if user:
+#             response_data = {'status': 'success'}
+#         else:
+#             response_data = {
+#                 'status': 'failure',
+#                 'msg_username': msg_username,
+#                 'msg_password': msg_password,
+#                 'msg_auth': msg_auth
+#             }
+#         return JsonResponse(response_data)
+#     else:
+#         return render(request, 'login.html',
+#                       {'msg_username': msg_username, 'msg_password': msg_password, 'msg_auth': msg_auth,
+#                        'is_first_load': is_first_load})
 
 
 def register(request):
