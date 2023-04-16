@@ -8,7 +8,7 @@ from googleapiclient.http import MediaIoBaseDownload
 import io
 
 # Google Drive API 配置
-SERVICE_ACCOUNT_FILE = 'myhomwwork/sevice_account.json'
+SERVICE_ACCOUNT_FILE = 'secure/sevice_account.json'
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
 # 数据库配置

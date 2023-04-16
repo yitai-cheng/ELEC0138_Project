@@ -1,5 +1,5 @@
 """
-WSGI config for myhomwwork project.
+WSGI config for secure project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
