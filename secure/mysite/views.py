@@ -11,8 +11,10 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 import random
 import string
-from .utils import send_verification_code, generate_verification_code
-
+from .utils import send_verification_code, generate_verification_code, check_verification_code
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from .models import Staff
 PAGINATOR_NUMBER = 5
 
 
@@ -51,9 +53,11 @@ def confirm(request):
                 print(redirect_url)
                 return redirect(redirect_url)
             else:
-                return JsonResponse({'status': 'failure'})
+                error_message = "Invalid username or password"
+                return render(request, 'login.html', {'error_message': error_message})
         else:
-            return JsonResponse({'status': 'missing_data'})
+            error_message = "Missing username or password"
+            return render(request, 'login.html', {'error_message': error_message})
     elif request.method == 'GET':
         return render(request, 'login.html')
     else:
@@ -61,13 +65,15 @@ def confirm(request):
 
 
 def verify(request):
+    print(request)
     if request.method == 'POST':
+        email = request.POST.get('phone_number')
         verification_code = request.POST.get('verification_code')
-        if verification_code == request.session.get('verification_code'):
+        print(email)
+        if check_verification_code(email, verification_code):
             username = request.session.get('username')
             password = request.session.get('password')
             user = authenticate(request, username=username, password=password)
-
             if user is not None:
                 login(request, user)
                 return redirect('/staff_list/')
@@ -96,7 +102,6 @@ def check_credentials(request):
     else:
         return JsonResponse({'status': 'failure'})
 
-
 def verify_code_view(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
@@ -110,8 +115,8 @@ def get_verification_code(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         phone_number = data.get('phone_number')
-        print(phone_number)
         verification_code = generate_verification_code()
+        print(verification_code)
         send_verification_code(phone_number, verification_code)
         request.session['verification_code'] = verification_code
         return JsonResponse({'status': 'success'})
@@ -145,11 +150,6 @@ def register(request):
         user.save()
         return redirect(reverse('confirm'))
     return render(request, 'register.html')
-
-
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Staff
 
 
 class StaffListView(LoginRequiredMixin, ListView):

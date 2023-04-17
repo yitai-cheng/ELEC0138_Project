@@ -39,7 +39,7 @@
             <h2>Phone number verification</h2>
 
 
-            <form method="post" action="{% url 'confirm' %}" onsubmit="hideErrorMessages()" id="verify-form">
+            <form method="post" action="{% url 'verify' %}" onsubmit="hideErrorMessages()" id="verify-form">
                 {% csrf_token %}
                 <input type="text" name="phone_number" id="phone_number" class="inputs phone_number"
                        placeholder="Enter Phone Number">
@@ -55,7 +55,7 @@
                 {% if msg_verification_code  and not is_first_load %}
                     <div class="error-message visible">{{ msg_verification_code }}</div>
                 {% endif %}
-                <button type="submit" onclick="submitVerificationCode(event)">Submit</button>
+                <button type="submit">Submit</button>
             </form>
 
 

@@ -48,6 +48,9 @@
                 {% if msg_password  and not is_first_load %}
                     <div class="error-message visible">{{ msg_password }}</div>
                 {% endif %}
+                {% if error_message %}
+                    <div class="alert alert-danger" style="color: red;">{{ error_message }}</div>
+                {% endif %}
                 <button type="submit">Confirm</button>
                 {% if msg_auth and not is_first_load %}
                     <div class="error-message visible">{{ msg_auth }}</div>
@@ -63,10 +66,10 @@
                 </div>
                 <div class="other-login-wrapper">
                     <div class="other-login-item">
-                        <img src="{% static 'img/QQ.png' %}" alt="QQ">
+                        <img src="{% static 'img/Google.png' %}" alt="Google">
                     </div>
                     <div class="other-login-item">
-                        <img src="{% static 'img/WeChat.png' %}" alt="WeChat">
+                        <img src="{% static 'img/linkedin.png' %}" alt="linkedin">
                     </div>
                 </div>
             </div>

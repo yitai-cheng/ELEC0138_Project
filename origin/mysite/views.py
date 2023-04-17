@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Staff
@@ -108,7 +108,6 @@ def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        # add password generator???
         password2 = request.POST.get('password2')
         email = request.POST.get('email')
         if User.objects.filter(username=username).exists():
@@ -129,7 +128,7 @@ def register(request):
 
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
-        return redirect('logins')
+        return redirect(reverse('login'))
     return render(request, 'register.html')
 
 

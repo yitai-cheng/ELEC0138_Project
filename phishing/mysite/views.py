@@ -18,9 +18,9 @@ from django.conf import settings
 import json
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-import rsa
-import base64
-from .utils import generate_RSA_keys, encrypt_RSA, decrypt_RSA
+# import rsa
+# import base64
+# from .utils import generate_RSA_keys, encrypt_RSA, decrypt_RSA
 PAGINATOR_NUMBER = 5
 def confirm(request):
     if request.POST.get('username') and request.POST.get('password'):
