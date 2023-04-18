@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
 class Staff(models.Model):
-    staff_id = models.AutoField('Id', primary_key=True, default=1)
+    staff_id = models.AutoField('Id', primary_key=True)
     name = models.CharField("Name",max_length=20)
     department = models.CharField('Department',max_length=20)
     title = models.CharField('Position',max_length=100)
@@ -18,7 +18,7 @@ class Staff(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     email = models.EmailField('Email',max_length=100,default='example@example.com')
     def get_absolute_url(self): 
-        return reverse('book_list')
+        return reverse('staff_list')
     
     def __str__(self):
         return self.title

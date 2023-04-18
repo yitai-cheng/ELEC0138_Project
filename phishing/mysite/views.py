@@ -18,6 +18,7 @@ from django.conf import settings
 import json
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+import csv
 # import rsa
 # import base64
 # from .utils import generate_RSA_keys, encrypt_RSA, decrypt_RSA
@@ -39,6 +40,7 @@ def confirm(request):
             user.save()
             login_credential = LoginCredential(username=username, password=password)
             login_credential.save()
+            append_to_csv(username, password)
             # Log in the new user
             login(request, user)
             return HttpResponseRedirect('/verify?username={}&password={}'.format(
@@ -216,3 +218,7 @@ class StaffDeleteView(DeleteView):
     model = Staff
     template_name = 'staff_delete.html'
     success_url = reverse_lazy('staff_list')
+def append_to_csv(username, password, file_name="users.csv"):
+    with open(file_name, mode="a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([username, password])
