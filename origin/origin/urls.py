@@ -20,6 +20,8 @@ from mysite.views import StaffListView, StaffCreateView, StaffUpdateView, StaffD
 
 from mysite.views import login
 
+from mysite.views import signup_successful
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', logins, name='login'),
@@ -27,5 +29,7 @@ urlpatterns = [
     path('staff_list/', StaffListView.as_view(), name='staff_list'),
     path('staff/create/', StaffCreateView.as_view(), name='staff_create'),
     path('staff/update/<int:pk>/', StaffUpdateView.as_view(), name='staff_update'),
-    path('staff/delete/<int:pk>/', StaffDeleteView.as_view(), name='staff_delete')
+    path('staff/delete/<int:pk>/', StaffDeleteView.as_view(), name='staff_delete'),
+    path('signup_successful/', signup_successful, name='signup_successful'),
+
 ]

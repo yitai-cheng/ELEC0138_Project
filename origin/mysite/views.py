@@ -128,8 +128,12 @@ def register(request):
 
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
-        return redirect(reverse('login'))
+        return redirect('signup_successful')
     return render(request, 'register.html')
+
+def signup_successful(request):
+    print("signup_successful")
+    return render(request, 'register_success.html')
 
 
 class StaffListView(ListView):

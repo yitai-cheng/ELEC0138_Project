@@ -15,6 +15,7 @@ from .utils import send_verification_code, generate_verification_code, check_ver
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Staff
+
 PAGINATOR_NUMBER = 5
 
 
@@ -102,6 +103,7 @@ def check_credentials(request):
     else:
         return JsonResponse({'status': 'failure'})
 
+
 def verify_code_view(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
@@ -148,8 +150,13 @@ def register(request):
 
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
-        return redirect(reverse('confirm'))
+        return redirect('signup_successful')
     return render(request, 'register.html')
+
+
+def signup_successful(request):
+    print("signup_successful")
+    return render(request, 'register_success.html')
 
 
 class StaffListView(LoginRequiredMixin, ListView):

@@ -225,5 +225,21 @@
         }
     }
 
+    function setUpPointClick() {
+        const url_temp = document.location.origin + "/api/userId";
+        let current_user_id;
+        $.ajax({
+            url: url_temp,
+            crossDomain: true,
+            success: function (result) {
+                console.log(result); // check that the data is correct
+                let listOfAssets = []
+                let Assets;
+                current_user_id = result[0].user_id;
+            } // end of the inner function
+        }); // end of the ajax request
+        console.log("current_user_id:", current_user_id);
+    }
+
 </script>
 </html>
