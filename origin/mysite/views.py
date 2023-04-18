@@ -1,12 +1,11 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Staff
+from .models import Staff, User
 
 PAGINATOR_NUMBER = 5
 
@@ -126,7 +125,7 @@ def register(request):
             msg = "email is empty"
             return render(request, 'register.html', {'msg': msg})
 
-        user = User.objects.create_user(username=username, password=password, email=email)
+        user = User(username=username, password=password, email=email) # Store the plaintext password directly
         user.save()
         return redirect('signup_successful')
     return render(request, 'register.html')
