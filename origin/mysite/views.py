@@ -27,11 +27,12 @@ def logins(request):
         if username and password:
             # INSECURE: Raw SQL query with string formatting - vulnerable to SQL injection
             user = User.objects.raw(
-                f"SELECT * FROM auth_user WHERE username = '{username}' AND password = '{password}'")
+                f"SELECT * FROM mysite_user WHERE username = '{username}' AND password = '{password}'")
 
             # Check if the query returned a user
             try:
                 user = next(iter(user))
+
             except StopIteration:
                 user = None
                 msg_auth = "Username or password is wrong"

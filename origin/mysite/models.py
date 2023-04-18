@@ -5,11 +5,16 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 class User(AbstractUser):
     password = models.CharField(max_length=255)
-    groups = models.ManyToManyField(Group, verbose_name=_('groups'), blank=True, related_name="%(app_label)s_%(class)s_groups")
-    user_permissions = models.ManyToManyField(Permission, verbose_name=_('user permissions'), blank=True, related_name="%(app_label)s_%(class)s_user_permissions")
+    groups = models.ManyToManyField(Group, verbose_name=_('groups'), blank=True,
+                                    related_name="%(app_label)s_%(class)s_groups")
+    user_permissions = models.ManyToManyField(Permission, verbose_name=_('user permissions'), blank=True,
+                                              related_name="%(app_label)s_%(class)s_user_permissions")
     email = models.EmailField(_('email address'), blank=True, null=True)
+
+
 # Create your models here.
 class Staff(models.Model):
     staff_id = models.AutoField('Id', primary_key=True)
