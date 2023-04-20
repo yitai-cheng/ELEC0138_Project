@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotAllowed, HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -14,10 +14,10 @@ import string
 from .utils import send_verification_code, generate_verification_code, check_verification_code
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .models import Staff
+from .models import Staff, FailedLoginAttempt
 
 PAGINATOR_NUMBER = 5
-
+FAILED_ATTEMPTS_THRESHOLD = 2
 
 def generate_password(length):
     """Generate a random password of the specified length."""
@@ -40,21 +40,43 @@ def generate_password_view(request):
 
 def confirm(request):
     print("confirm")
+    print(request.META.get('REMOTE_ADDR'))
+    print(request.META.get('HTTP_X_FORWARDED_FOR'))
     if request.method == 'POST':
         # print(request.POST)
         if request.POST.get('username') and request.POST.get('password'):
             username = request.POST.get('username')
             password = request.POST.get('password')
-
+            try:
+                failed_login_attempt = FailedLoginAttempt.objects.get(username=username)
+                if failed_login_attempt.is_locked:
+                    error_message = "Your account is locked"
+                    return render(request, 'login.html', {'error_message': error_message})
+            except FailedLoginAttempt.DoesNotExist:
+                pass
             user = authenticate(request, username=username, password=password)
             if user:
+                try:
+                    failed_login_attempt = FailedLoginAttempt.objects.get(username=user.get_username())
+                    failed_login_attempt.failure_count = 0
+                    failed_login_attempt.save()
+                except FailedLoginAttempt.DoesNotExist:
+                    pass
                 request.session['username'] = username
                 request.session['password'] = password
                 redirect_url = reverse('verify')
                 print(redirect_url)
                 return redirect(redirect_url)
             else:
-                error_message = "Invalid username or password"
+                error_message = "invalid username or password"
+                try:
+                    failed_login_attempt = FailedLoginAttempt.objects.get(username=username)
+                    failed_login_attempt.failure_count += 1
+                    failed_login_attempt.save()
+                except FailedLoginAttempt.DoesNotExist:
+                    failed_login_attempt = FailedLoginAttempt.objects.create(username=username, failure_count=1)
+                if failed_login_attempt.failure_count > 2:
+                    error_message = "Your account is locked"
                 return render(request, 'login.html', {'error_message': error_message})
         else:
             error_message = "Missing username or password"

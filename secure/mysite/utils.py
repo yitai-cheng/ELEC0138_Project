@@ -1,8 +1,6 @@
 from twilio.rest import Client
 from django.conf import settings
 import random
-import base64
-
 
 def generate_verification_code():
     return str(random.randint(100000, 999999))
@@ -26,3 +24,4 @@ def check_verification_code(phone_number, user_code):
         .create(to=phone_number, code=user_code)
 
     return verification_check.status == 'approved'
+
