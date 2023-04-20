@@ -17,4 +17,5 @@ dependencies:
     - keras
     - scikit-learn
     - pydot
-    - torch
+    - mlmodels
+    - python-whois

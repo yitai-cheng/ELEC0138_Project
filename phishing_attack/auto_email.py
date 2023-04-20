@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Read sender email and password from a secrets file
-with open('/Users/raresnitu/Documents/security_project/secrets.txt', 'r') as f:
+with open('/Users/raresnitu/Documents/security_project/ELEC0138_Project/secrets.txt', 'r') as f:
     sender_email, app_password = f.read().strip().split(",")
 print(sender_email, app_password)
 
@@ -14,7 +14,7 @@ print(sender_email, app_password)
 msg = MIMEMultipart()
 msg["From"] = "Company Support <support@company.com>"
 msg["Subject"] = "Your account has been compromised"
-text = MIMEText("Your account has been compromised. Please click on the link below to reset your password. http://127.0.0.1:8000/")
+text = MIMEText("Your account has been compromised. Please click on the link below to reset your password. http://127.0.0.1:8001/")
 msg.attach(text)
 
 # Modify the email headers to spoof the sender address
@@ -24,7 +24,7 @@ msg.attach(text)
 
 
 # Read the email database
-with open('/Users/raresnitu/Documents/security_project/email_db.csv', 'r') as f:
+with open('/Users/raresnitu/Documents/security_project/ELEC0138_Project/email_db.csv', 'r') as f:
     reader = csv.reader(f)
     next(reader)
     for row in reader:

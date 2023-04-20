@@ -19,7 +19,6 @@ from mysite.views import confirm, verify, register, get_verification_code, check
 from mysite.views import StaffListView, StaffCreateView, StaffUpdateView, StaffDeleteView
 from mysite.views import generate_password_view
 from mysite.views import signup_successful
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', confirm, name='confirm'),
@@ -33,5 +32,4 @@ urlpatterns = [
     path('check_credentials/', check_credentials, name='check_credentials'),
     path('generate_password/', generate_password_view, name='generate_password'),
     path('signup_successful/', signup_successful, name='signup_successful'),
-
 ]

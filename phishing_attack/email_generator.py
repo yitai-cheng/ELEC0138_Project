@@ -13,6 +13,7 @@ with open('email_db.csv', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(['name', 'email'])
     writer.writerow(['Rares Nitu','nitu.rares@yahoo.com'])
+    writer.writerow(['Eden Eden','chooseyourtask@gmail.com'])
     for i in range(20):
         writer.writerow([names[i], emails[i]])
 
