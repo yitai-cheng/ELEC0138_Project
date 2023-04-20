@@ -40,7 +40,7 @@
             <form method="post" action="{% url 'confirm' %}" onsubmit="hideErrorMessages()" id="confirm-form">
                 {% csrf_token %}
                 <input type="text" id="username" name="username" class="inputs user"
-                       placeholder="Enter Email Or Number">
+                       placeholder="Username">
                 {% if msg_username  and not is_first_load %}
                     <div class="error-message visible">{{ msg_username }}</div>
                 {% endif %}

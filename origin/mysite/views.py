@@ -26,6 +26,7 @@ def logins(request):
         # Check if the username and password are provided
         if username and password:
             # INSECURE: Raw SQL query with string formatting - vulnerable to SQL injection
+            print(f"SELECT * FROM mysite_user WHERE username = '{username}' AND password = '{password}'")
             user = User.objects.raw(
                 f"SELECT * FROM mysite_user WHERE username = '{username}' AND password = '{password}'")
 

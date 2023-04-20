@@ -9,6 +9,7 @@
     <title>Document</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/popup_style.css' %}">
 </head>
 
 <body>
@@ -18,6 +19,16 @@
         <img src="{% static 'img/img1.png' %}" class="sphere s-animtion" alt="sphere">
     </div>
     <div class="right">
+        <div class="popup">
+            <div class="popup-content">
+                <p>Do you want to generate a random password?</p>
+                <div class="popup-buttons">
+                    <button class="popup-cancel">Cancel</button>
+                    <button class="popup-generate">Generate Password</button>
+                </div>
+            </div>
+        </div>
+
 
         <div class="form-wrappepr">
             <h1>Register</h1>
@@ -45,7 +56,7 @@
                 <label>
                     <input type="text" name="email_or_number" class="inputs user" placeholder="Enter Email Or Number">
                 </label>
-                <button type="submit">Registe</button>
+                <button type="submit">Register</button>
             </form>
 
         </div>
@@ -79,16 +90,27 @@
         // Add a click event listener to the password input fields
         $(".pwd").on("click", function () {
             // Check if the click event originated from the password input field
-            // Ask the user if they want to generate a random password
-            if (confirm("Do you want to generate a random password?")) {
-                // Send an AJAX request to the server to generate the password
-                $.get('/generate_password/', function (data) {
-                    // Set the value of both password input fields to the generated password
-                    $(".pwd").val(data.password);
-                });
-            }
-
+            // Show the popup
+            $(".popup").show();
         });
+
+// Add a click event listener to the "Generate Password" button in the popup
+        $('.popup-generate').on('click', function () {
+            // Send an AJAX request to the server to generate the password
+            $.get('/generate_password/', function (data) {
+                // Set the value of both password input fields to the generated password
+                $(".pwd").val(data.password);
+            });
+            // Hide the popup
+            $(".popup").hide();
+        });
+
+// Add a click event listener to the "Cancel" button in the popup
+        $('.popup-cancel').on('click', function () {
+            // Hide the popup
+            $(".popup").hide();
+        });
+
     });
 
 
