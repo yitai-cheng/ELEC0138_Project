@@ -6,9 +6,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Read sender email and password from a secrets file
-with open('/Users/raresnitu/Documents/security_project/ELEC0138_Project/secrets.txt', 'r') as f:
+with open('/Users/raresnitu/Documents/security_project/secrets.txt', 'r') as f:
     sender_email, app_password = f.read().strip().split(",")
-print(sender_email, app_password)
+#print(sender_email, app_password)
 
 # Create the email message and hide the real sender
 msg = MIMEMultipart()
@@ -24,7 +24,7 @@ msg.attach(text)
 
 
 # Read the email database
-with open('/Users/raresnitu/Documents/security_project/ELEC0138_Project/email_db.csv', 'r') as f:
+with open('/Users/raresnitu/Documents/security_project/ELEC0138_Project/phishing_attack/email_db.csv', 'r') as f:
     reader = csv.reader(f)
     next(reader)
     for row in reader:

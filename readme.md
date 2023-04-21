@@ -21,3 +21,9 @@ We develop three versions of the web application.
 3. The third version is the secure version of the web application. It mitigates all potential attacks mentioned before and add additional mitigation strategy including database backup. To run it: python secure/manage.py runserver
 
 To run https instead of http: python manage.py runsslserver --cert your_dir/ELEC0138_Project/ssl/server.crt --key your_dir/ELEC0138_Project/ssl/server.key
+
+To run the phishing attack make sure a file named secrets.txt inlcuding the email,password of the sender email is tin the phishing attack folder before running. The program that should be run is auto_email
+
+Before running the brute force attack make sure that 1000-most-common-passwords and the dictionary.txt are in the same folder. The updated attack that should be run is brute_force.py
+
+To run the notifcaton system, run the notification_sys.py and input the website you want to check for phishing. Be advised that the notification system only runs on macbook since it is based on the notification of the terminal
