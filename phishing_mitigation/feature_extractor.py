@@ -160,3 +160,5 @@ def extract_features(url):
         "features": features
     }
 
+#feature extraction was based on the original futere extraction from the phishing dataset
+#the code is availbe at https://data.mendeley.com/datasets/c2gw7fy2j4/3
