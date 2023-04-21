@@ -20,7 +20,7 @@
             <div class="top-item">
                 <span class="top-text">Home</span>
             </div>
-            <a href="{% url 'register' %}">
+            <a href="">
                 <div class="top-item">
                     <span class="top-text">Register</span>
                 </div>
@@ -40,7 +40,7 @@
             <form method="post" action="{% url 'confirm' %}" onsubmit="hideErrorMessages()" id="confirm-form">
                 {% csrf_token %}
                 <input type="text" id="username" name="username" class="inputs user"
-                       placeholder="Usernamer">
+                       placeholder="Username">
                 {% if msg_username  and not is_first_load %}
                     <div class="error-message visible">{{ msg_username }}</div>
                 {% endif %}
@@ -194,30 +194,30 @@
     document.addEventListener('DOMContentLoaded', hideErrorMessagesOnFirstLoad);
 
 
-    function submitVerificationCode() {
-        let verification_code = document.getElementById("verification_code").value;
-
-        if (!verification_code) {
-            alert("Please enter the verification code.");
-        } else {
-            let csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-            fetch("{% url 'verify' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrfToken,
-                },
-                body: JSON.stringify({verification_code: verification_code}),
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        window.location.href = "/staff/";
-                    } else {
-                        alert("Failed to login. Please check your verification code.");
-                    }
-                });
-        }
-    }
+    {#function submitVerificationCode() {#}
+    {#    let verification_code = document.getElementById("verification_code").value;#}
+    {##}
+    {#    if (!verification_code) {#}
+    {#        alert("Please enter the verification code.");#}
+    {#    } else {#}
+    {#        let csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;#}
+    {#        fetch("{% url 'verify' %}", {#}
+    {#            method: "POST",#}
+    {#            headers: {#}
+    {#                "Content-Type": "application/json",#}
+    {#                "X-CSRFToken": csrfToken,#}
+    {#            },#}
+    {#            body: JSON.stringify({verification_code: verification_code}),#}
+    {#        })#}
+    {#            .then((response) => {#}
+    {#                if (response.ok) {#}
+    {#                    window.location.href = "/staff/";#}
+    {#                } else {#}
+    {#                    alert("Failed to login. Please check your verification code.");#}
+    {#                }#}
+    {#            });#}
+    {#    }#}
+    {#}#}
 
 </script>
 <html>

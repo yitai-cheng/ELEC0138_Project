@@ -39,17 +39,14 @@ def generate_password_view(request):
 
 
 def confirm(request):
-    print("confirm")
-    print(request.META.get('REMOTE_ADDR'))
-    print(request.META.get('HTTP_X_FORWARDED_FOR'))
     if request.method == 'POST':
-        # print(request.POST)
         if request.POST.get('username') and request.POST.get('password'):
             username = request.POST.get('username')
             password = request.POST.get('password')
             try:
                 failed_login_attempt = FailedLoginAttempt.objects.get(username=username)
                 if failed_login_attempt.is_locked:
+                    print("Your account is locked")
                     error_message = "Your account is locked"
                     return render(request, 'login.html', {'error_message': error_message})
             except FailedLoginAttempt.DoesNotExist:
@@ -65,7 +62,6 @@ def confirm(request):
                 request.session['username'] = username
                 request.session['password'] = password
                 redirect_url = reverse('verify')
-                print(redirect_url)
                 return redirect(redirect_url)
             else:
                 error_message = "invalid username or password"
@@ -75,8 +71,11 @@ def confirm(request):
                     failed_login_attempt.save()
                 except FailedLoginAttempt.DoesNotExist:
                     failed_login_attempt = FailedLoginAttempt.objects.create(username=username, failure_count=1)
-                if failed_login_attempt.failure_count > 2:
+                if failed_login_attempt.failure_count > FAILED_ATTEMPTS_THRESHOLD:
+                    failed_login_attempt.is_locked = True
+                    failed_login_attempt.save()
                     error_message = "Your account is locked"
+                print(error_message)
                 return render(request, 'login.html', {'error_message': error_message})
         else:
             error_message = "Missing username or password"
