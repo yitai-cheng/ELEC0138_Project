@@ -1,4 +1,4 @@
-"using faker library generate a csv file with 20 emails and 20 names."
+
 import csv
 from faker import Faker
 
