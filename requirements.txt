@@ -55,7 +55,7 @@ docplex==2.24.232
 fastdtw==0.3.4
 fastjsonschema==2.16.2
 flatbuffers==22.10.26
-fonttools==4.38.0
+fonttools==4.43.0
 fsspec==2023.1.0
 functoolz==0.4
 future==0.18.2
